@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quiz</title>
+  </head>
+  <body>
+    <h1 id="quizName">Loading…</h1>
+    <form id="quiz"></form>
+
+    <script>
+      const nameEl = document.getElementById('quizName');
+      const form = document.getElementById('quiz');
+
+      function render(quiz) {
+        nameEl.textContent = quiz.quizName;
+        quiz.questions.forEach((q, i) => {
+          const fieldset = document.createElement('fieldset');
+          const legend = document.createElement('legend');
+          legend.textContent = q.question;
+          fieldset.appendChild(legend);
+
+          if (q.types === 'enter-text') {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'q' + i;
+            fieldset.appendChild(input);
+          } else {
+            const type = q.types === 'multiple-choice' ? 'checkbox' : 'radio';
+            q.options.forEach((option) => {
+              const label = document.createElement('label');
+              const input = document.createElement('input');
+              input.type = type;
+              input.name = 'q' + i;
+              input.value = option;
+              label.appendChild(input);
+              label.append(' ' + option);
+              fieldset.appendChild(label);
+              fieldset.appendChild(document.createElement('br'));
+            });
+          }
+          form.appendChild(fieldset);
+        });
+      }
+
+      fetch('/public/data/questions.json')
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to load questions');
+          return res.json();
+        })
+        .then(render)
+        .catch((err) => {
+          nameEl.textContent = err.message;
+        });
+    </script>
+  </body>
+</html>
