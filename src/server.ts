@@ -1,6 +1,7 @@
 import path from 'node:path';
 import express, { type Express, type Request, type Response } from 'express';
 
+import { router as gameRouter } from './routes/game.ts';
 import { router as lobbyRouter } from './routes/lobby.ts';
 import { initWebSocket } from './websocket/serverWs.ts';
 
@@ -15,6 +16,7 @@ app.use('/public', express.static(publicDir));
 app.use(express.json());
 
 app.use('/lobby', lobbyRouter);
+app.use('/game', gameRouter);
 
 // Health Check Route
 app.get('/health', (req, res) => {

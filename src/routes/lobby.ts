@@ -5,10 +5,6 @@ import { Team } from '../SingletonStore/team.ts';
 
 export const router = express.Router({ caseSensitive: true, strict: true });
 
-router.get("/health", (req: Request, res: Response) => {
-  res.json({ status: 'healthy'});
-});
-
 router.get("/teams", (req: Request, res: Response) => {
   res.json(lobbyStore.getTeams());
 });
@@ -25,6 +21,7 @@ router.post('/join', (req: Request, res: Response) => {
   res.status(201).json({ uuid: `${newTeam.id}`, message: `Team ${teamName} joined successfully` });
 });
 
+// WARNING: This endpoint allows ANY user to enter a team ID and remove that team from the lobby. This is a security risk and should be protected in a real application.
 router.delete("/leave", (req: Request, res: Response) => {
   const { teamId } = req.body;
   if (!teamId || typeof teamId !== 'string') {

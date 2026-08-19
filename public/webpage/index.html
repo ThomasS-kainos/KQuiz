@@ -55,6 +55,9 @@
         if (msg.type === 'teams-update') {
           renderTeams(msg.teams);
         }
+        if (msg.type === 'start-game') {
+          window.location.href = '/quiz';
+        }
       }
 
       function renderTeams(teams) {

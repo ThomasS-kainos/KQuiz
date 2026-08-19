@@ -6,53 +6,81 @@
     <title>Quiz</title>
   </head>
   <body>
-    <h1 id="quizName">Loading…</h1>
-    <form id="quiz"></form>
+    <h1 id="quizName">Quiz</h1>
+    <p id="status">Connecting…</p>
+    <p id="question"></p>
+    <form id="answerForm" hidden>
+      <label>
+        Answer
+        <input id="answer" type="text" required autocomplete="off" />
+      </label>
+      <button type="submit">Submit answer</button>
+    </form>
+    <p id="result" role="status"></p>
 
     <script>
       const nameEl = document.getElementById('quizName');
-      const form = document.getElementById('quiz');
+      const statusEl = document.getElementById('status');
+      const questionEl = document.getElementById('question');
+      const answerForm = document.getElementById('answerForm');
+      const answerInput = document.getElementById('answer');
+      const resultEl = document.getElementById('result');
 
-      function render(quiz) {
-        nameEl.textContent = quiz.quizName;
-        quiz.questions.forEach((q, i) => {
-          const fieldset = document.createElement('fieldset');
-          const legend = document.createElement('legend');
-          legend.textContent = q.question;
-          fieldset.appendChild(legend);
-
-          if (q.types === 'enter-text') {
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.name = 'q' + i;
-            fieldset.appendChild(input);
-          } else {
-            const type = q.types === 'multiple-choice' ? 'checkbox' : 'radio';
-            q.options.forEach((option) => {
-              const label = document.createElement('label');
-              const input = document.createElement('input');
-              input.type = type;
-              input.name = 'q' + i;
-              input.value = option;
-              label.appendChild(input);
-              label.append(' ' + option);
-              fieldset.appendChild(label);
-              fieldset.appendChild(document.createElement('br'));
-            });
-          }
-          form.appendChild(fieldset);
-        });
+      async function loadCurrentQuestion() {
+        const response = await fetch('/game/current-question');
+        if (!response.ok) throw new Error('Failed to load question');
+        const currentQuestion = await response.json();
+        render(currentQuestion);
       }
 
-      fetch('/public/data/questions.json')
-        .then((res) => {
-          if (!res.ok) throw new Error('Failed to load questions');
-          return res.json();
-        })
-        .then(render)
-        .catch((err) => {
-          nameEl.textContent = err.message;
+      function render(currentQuestion) {
+        questionEl.textContent = currentQuestion.question;
+        answerForm.hidden = !currentQuestion.question || currentQuestion.answer === '';
+        resultEl.textContent = '';
+        answerInput.value = '';
+      }
+
+      function connect() {
+        const scheme = location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const socket = new WebSocket(`${scheme}//${location.host}`);
+
+        socket.onopen = () => {
+          statusEl.textContent = 'Connected';
+        };
+
+        socket.onmessage = async (event) => {
+          const message = JSON.parse(event.data);
+          if (message.type === 'next-question') {
+            try {
+              await loadCurrentQuestion();
+            } catch (error) {
+              statusEl.textContent = error.message;
+            }
+          }
+        };
+
+        socket.onclose = () => {
+          statusEl.textContent = 'Disconnected — reconnecting…';
+          setTimeout(connect, 2000);
+        };
+      }
+
+      answerForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const response = await fetch('/game/submit-answer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answer: answerInput.value })
         });
+        const result = await response.json();
+        resultEl.textContent = result.correct ? 'Correct' : 'Incorrect';
+      });
+
+      loadCurrentQuestion()
+        .catch((error) => {
+          statusEl.textContent = error.message;
+        });
+      connect();
     </script>
   </body>
 </html>
