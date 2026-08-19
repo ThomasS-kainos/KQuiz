@@ -3,6 +3,7 @@ export const Message = {
     StartGame: "start-game",
     NextQuestion: "next-question",
     ShowAnswer: "show-answer",
+    ShowLeaderboard: "show-leaderboard",
 } as const;
 
 export type Message = typeof Message[keyof typeof Message];

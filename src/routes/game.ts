@@ -3,8 +3,20 @@ import express, { type Request, type Response } from 'express';
 import { quizStore } from '../SingletonStore/quiz.ts';
 import { broadcast } from '../websocket/clients.ts';
 import { Message } from '../websocket/message.ts';
+import { lobbyStore } from '../SingletonStore/lobby.ts';
 
 export const router = express.Router({ caseSensitive: true, strict: true });
+
+function getLeaderboard() {
+  return Array.from(lobbyStore.teamList.values())
+    .map(team => ({
+      id: team.id,
+      name: team.name,
+      correctAnswers: team.correctAnswers,
+      incorrectAnswers: team.incorrectAnswers
+    }))
+    .sort((a, b) => b.correctAnswers - a.correctAnswers);
+}
 
 // Once Auth in place, this endpoint should be protected to only allow the host to start the quiz.
 router.post("/start-quiz", (req: Request, res: Response) => {
@@ -27,6 +39,18 @@ router.post("/show-answer", (req: Request, res: Response) => {
   res.status(200).json({ answer });
 });
 
+router.get("/show-leaderboard", (req: Request, res: Response) => {
+    const leaderboard = getLeaderboard();
+
+      broadcast({ type: Message.ShowLeaderboard, leaderboard });
+    
+    res.status(200).json({ leaderboard });
+});
+
+router.get("/leaderboard", (req: Request, res: Response) => {
+  res.status(200).json({ leaderboard: getLeaderboard() });
+});
+
 router.get("/current-question", (req: Request, res: Response) => {
   const { question } = quizStore.currentQuestion;
   res.status(200).json({ question });
@@ -37,11 +61,24 @@ router.post("/submit-answer", (req: Request, res: Response) => {
   if (!answer || typeof answer !== 'string') {
     return res.status(400).json({ error: 'Invalid answer' });
   }
+  
+  const teamID = req.get("teamID");
+  if (!teamID || typeof teamID !== 'string') {
+    return res.status(400).json({ error: 'Invalid team ID' });
+  }
+
+  const team = lobbyStore.getTeamById(teamID);
+
+  if (!team) {
+    return res.status(404).json({ error: 'Team not found' });
+  }
 
   const isCorrect = answer.trim().toLowerCase() === quizStore.currentQuestion.answer.trim().toLowerCase();
 
   if (isCorrect) {
-    // Update teams correct answer count in the lobby store (not implemented)
+    team.correctAnswers++;
+  } else {
+    team.incorrectAnswers++;
   }
 
   res.status(200).json({ message: "Answer Submitted" });

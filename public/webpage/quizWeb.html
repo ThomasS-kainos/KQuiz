@@ -27,6 +27,21 @@
       const resultEl = document.getElementById('result');
       let submittedAnswer = null;
 
+      function showQuiz() {
+        nameEl.hidden = false;
+        statusEl.hidden = false;
+        questionEl.hidden = false;
+        answerForm.hidden = !questionEl.textContent;
+      }
+
+      function showResultOnly(message) {
+        nameEl.hidden = true;
+        statusEl.hidden = true;
+        questionEl.hidden = true;
+        answerForm.hidden = true;
+        resultEl.textContent = message;
+      }
+
       async function loadCurrentQuestion() {
         const response = await fetch('/game/current-question');
         if (!response.ok) throw new Error('Failed to load question');
@@ -41,6 +56,7 @@
         answerInput.value = '';
         answerInput.disabled = false;
         submittedAnswer = null;
+        showQuiz();
       }
 
       function connect() {
@@ -62,7 +78,10 @@
           }
           if (message.type === 'show-answer' && submittedAnswer !== null) {
             const isCorrect = submittedAnswer.trim().toLowerCase() === message.answer.trim().toLowerCase();
-            resultEl.textContent = isCorrect ? 'Correct' : 'Incorrect';
+            showResultOnly(isCorrect ? 'Correct' : 'Incorrect');
+          }
+          if (message.type === 'show-leaderboard') {
+            window.location.href = '/leaderboard';
           }
         };
 
@@ -74,14 +93,27 @@
 
       answerForm.addEventListener('submit', async (event) => {
         event.preventDefault();
+        const teamID = localStorage.getItem('teamID');
+        if (!teamID) {
+          resultEl.textContent = 'Join a team before submitting an answer';
+          return;
+        }
+
         const response = await fetch('/game/submit-answer', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            teamID
+          },
           body: JSON.stringify({ answer: answerInput.value })
         });
-        const result = await response.json();
+        if (!response.ok) {
+          resultEl.textContent = 'Failed to submit answer';
+          return;
+        }
+
         submittedAnswer = answerInput.value;
-        resultEl.textContent = result.message;
+        showResultOnly('Answer submitted');
         answerInput.disabled = true;
       });
 

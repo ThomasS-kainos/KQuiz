@@ -30,6 +30,10 @@ class Lobby {
         }));
     }
 
+    public getTeamById(teamId: string): Team | undefined {
+        return this.teamList.get(teamId);
+    }
+
     private broadcastTeams() {
         broadcast({ type: "teams-update", teams: this.getTeams() });
     }

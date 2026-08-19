@@ -33,6 +33,11 @@ app.get('/quiz', (req: Request, res: Response) => {
   res.sendFile(path.join(publicDir, 'webpage', 'quizWeb.html'));
 });
 
+//Leaderboard page
+app.get('/leaderboard', (req: Request, res: Response) => {
+  res.sendFile(path.join(publicDir, 'webpage', 'leaderboard.html'));
+});
+
 export const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

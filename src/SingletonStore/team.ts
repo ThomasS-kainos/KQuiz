@@ -6,6 +6,9 @@ export class Team {
 
     public joinTime: number = Date.now();
 
+    public correctAnswers: number = 0;
+    public incorrectAnswers: number = 0;
+
     constructor(name: string) {
         this.name = name;
     }
