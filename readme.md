@@ -7,7 +7,7 @@ For this project to work you must be using **Node 26.x**
 ### Setup Guide
 1. Clone the repo into your desired folder like such:
 ```bash
-git clone smth.git YOUR_NAME_HERE
+git clone https://github.com/ThomasS-kainos/KQuiz.git YOUR_NAME_HERE
 ```
 2. Run the node installer
 ```bash
