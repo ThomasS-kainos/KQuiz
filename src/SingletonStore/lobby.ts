@@ -3,6 +3,7 @@ import { debug } from "node:console";
 
 import { Team } from "./team.ts";
 import { broadcast } from "../websocket/clients.ts";
+import { Message } from "../websocket/message.ts";
 
 class Lobby {
     public teamList: Map<string, Team> = new Map();
@@ -35,7 +36,7 @@ class Lobby {
     }
 
     private broadcastTeams() {
-        broadcast({ type: "teams-update", teams: this.getTeams() });
+        broadcast({ type: Message.TeamsUpdate });
     }
 }
 

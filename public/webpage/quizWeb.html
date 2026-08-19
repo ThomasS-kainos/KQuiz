@@ -50,6 +50,13 @@
         render(currentQuestion);
       }
 
+      async function loadCurrentAnswer() {
+        const response = await fetch('/game/current-answer');
+        if (!response.ok) throw new Error('Failed to load answer');
+
+        return response.json();
+      }
+
       function render(currentQuestion) {
         questionEl.textContent = currentQuestion.question;
         answerForm.hidden = !currentQuestion.question;
@@ -78,8 +85,13 @@
             }
           }
           if (message.type === 'show-answer' && submittedAnswer !== null) {
-            const isCorrect = submittedAnswer.trim().toLowerCase() === message.answer.trim().toLowerCase();
-            showResultOnly(isCorrect ? 'Correct' : 'Incorrect');
+            try {
+              const { answer } = await loadCurrentAnswer();
+              const isCorrect = submittedAnswer.trim().toLowerCase() === answer.trim().toLowerCase();
+              showResultOnly(isCorrect ? 'Correct' : 'Incorrect');
+            } catch (error) {
+              statusEl.textContent = error.message;
+            }
           }
           if (message.type === 'show-leaderboard') {
             window.location.href = '/leaderboard';

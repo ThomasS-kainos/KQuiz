@@ -7,17 +7,6 @@ import { lobbyStore } from '../SingletonStore/lobby.ts';
 
 export const router = express.Router({ caseSensitive: true, strict: true });
 
-function getLeaderboard() {
-  return Array.from(lobbyStore.teamList.values())
-    .map(team => ({
-      id: team.id,
-      name: team.name,
-      correctAnswers: team.correctAnswers,
-      incorrectAnswers: team.incorrectAnswers
-    }))
-    .sort((a, b) => b.correctAnswers - a.correctAnswers);
-}
-
 // Once Auth in place, this endpoint should be protected to only allow the host to start the quiz.
 router.post("/start-quiz", (req: Request, res: Response) => {
   quizStore.NextQuestion();
@@ -35,20 +24,32 @@ router.post("/next-question", (req: Request, res: Response) => {
 // Once Auth in place, this endpoint should be protected to only allow the host to start the quiz.
 router.post("/show-answer", (req: Request, res: Response) => {
   const { answer } = quizStore.currentQuestion;
-  broadcast({ type: Message.ShowAnswer, answer });
+  broadcast({ type: Message.ShowAnswer });
+  res.status(200).json({ answer });
+});
+
+router.get("/current-answer", (req: Request, res: Response) => {
+  const { answer } = quizStore.currentQuestion;
   res.status(200).json({ answer });
 });
 
 router.get("/show-leaderboard", (req: Request, res: Response) => {
-    const leaderboard = getLeaderboard();
-
-      broadcast({ type: Message.ShowLeaderboard, leaderboard });
+    broadcast({ type: Message.ShowLeaderboard });
     
-    res.status(200).json({ leaderboard });
+    res.status(200).json({ message: 'Leaderboard broadcasted' });
 });
 
 router.get("/leaderboard", (req: Request, res: Response) => {
-  res.status(200).json({ leaderboard: getLeaderboard() });
+    const leaderboard = Array.from(lobbyStore.teamList.values())
+    .map(team => ({
+      id: team.id,
+      name: team.name,
+      correctAnswers: team.correctAnswers,
+      incorrectAnswers: team.incorrectAnswers
+    }))
+    .sort((a, b) => b.correctAnswers - a.correctAnswers);
+
+  res.status(200).json({ leaderboard: leaderboard });
 });
 
 router.get("/current-question", (req: Request, res: Response) => {

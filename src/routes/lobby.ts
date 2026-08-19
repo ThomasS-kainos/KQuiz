@@ -9,6 +9,7 @@ router.get("/teams", (req: Request, res: Response) => {
   res.json(lobbyStore.getTeams());
 });
 
+//Curently no device join limitations, could be added in the future to limit number of devices per team or per IP address.
 router.post('/join', (req: Request, res: Response) => {
   const { teamName } = req.body;
   if (!teamName || typeof teamName !== 'string') {

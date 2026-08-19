@@ -49,7 +49,10 @@
         socket.onmessage = (event) => {
           const message = JSON.parse(event.data);
           if (message.type === 'show-leaderboard') {
-            renderLeaderboard(message.leaderboard);
+            loadLeaderboard()
+              .catch((error) => {
+                statusEl.textContent = error.message;
+              });
           }
         };
 

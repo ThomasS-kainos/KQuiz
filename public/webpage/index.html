@@ -55,11 +55,24 @@
 
       function handle(msg) {
         if (msg.type === 'teams-update') {
-          renderTeams(msg.teams);
+          loadTeams()
+            .catch(() => {
+              statusEl.textContent = 'Failed to load teams';
+            });
         }
         if (msg.type === 'start-game') {
           window.location.href = '/quiz';
         }
+      }
+
+      async function loadTeams() {
+        const res = await fetch('/lobby/teams');
+        if (!res.ok) {
+          throw new Error('Failed to load teams');
+        }
+
+        const teams = await res.json();
+        renderTeams(teams);
       }
 
       function renderTeams(teams) {
@@ -70,6 +83,7 @@
           teamsEl.appendChild(li);
         });
       }
+        loadTeams();
 
       joinForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -86,6 +100,7 @@
         myTeamId = data.uuid;
         sessionStorage.setItem('teamID', myTeamId);
         myTeamEl.textContent = teamNameInput.value;
+        await loadTeams();
         joinForm.hidden = true;
         lobbyEl.hidden = false;
       });
@@ -99,6 +114,7 @@
         });
         myTeamId = null;
         sessionStorage.removeItem('teamID');
+        await loadTeams();
         lobbyEl.hidden = true;
         joinForm.hidden = false;
       });
