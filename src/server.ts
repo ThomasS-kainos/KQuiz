@@ -2,6 +2,7 @@ import path from 'node:path';
 import express, { type Express, type Request, type Response } from 'express';
 
 import { router as lobbyRouter } from './routes/lobby.ts';
+import { initWebSocket } from './websocket/serverWs.ts';
 
 const PORT = 3000;
 const app: Express = express();
@@ -33,3 +34,5 @@ app.get('/quiz', (req: Request, res: Response) => {
 export const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+initWebSocket(server);
