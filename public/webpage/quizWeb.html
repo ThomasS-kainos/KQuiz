@@ -25,6 +25,7 @@
       const answerForm = document.getElementById('answerForm');
       const answerInput = document.getElementById('answer');
       const resultEl = document.getElementById('result');
+      let submittedAnswer = null;
 
       async function loadCurrentQuestion() {
         const response = await fetch('/game/current-question');
@@ -35,9 +36,11 @@
 
       function render(currentQuestion) {
         questionEl.textContent = currentQuestion.question;
-        answerForm.hidden = !currentQuestion.question || currentQuestion.answer === '';
+        answerForm.hidden = !currentQuestion.question;
         resultEl.textContent = '';
         answerInput.value = '';
+        answerInput.disabled = false;
+        submittedAnswer = null;
       }
 
       function connect() {
@@ -57,6 +60,10 @@
               statusEl.textContent = error.message;
             }
           }
+          if (message.type === 'show-answer' && submittedAnswer !== null) {
+            const isCorrect = submittedAnswer.trim().toLowerCase() === message.answer.trim().toLowerCase();
+            resultEl.textContent = isCorrect ? 'Correct' : 'Incorrect';
+          }
         };
 
         socket.onclose = () => {
@@ -73,7 +80,9 @@
           body: JSON.stringify({ answer: answerInput.value })
         });
         const result = await response.json();
-        resultEl.textContent = result.correct ? 'Correct' : 'Incorrect';
+        submittedAnswer = answerInput.value;
+        resultEl.textContent = result.message;
+        answerInput.disabled = true;
       });
 
       loadCurrentQuestion()

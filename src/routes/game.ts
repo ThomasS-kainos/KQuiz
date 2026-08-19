@@ -6,26 +6,32 @@ import { Message } from '../websocket/message.ts';
 
 export const router = express.Router({ caseSensitive: true, strict: true });
 
-// Implement: Called via the API (Not exposed on the frontend) to start the quiz and to tell the clients to get /current-question and display the first question
+// Once Auth in place, this endpoint should be protected to only allow the host to start the quiz.
 router.post("/start-quiz", (req: Request, res: Response) => {
   quizStore.NextQuestion();
   broadcast({ type: Message.StartGame });
   res.status(200).json({ message: 'Quiz started' });
 });
 
-// Implement: Called via the API (Not exposed on the frontend) to tell the clients to get /current-question and display the next question
+// Once Auth in place, this endpoint should be protected to only allow the host to start the quiz.
 router.post("/next-question", (req: Request, res: Response) => {
   quizStore.NextQuestion();
   broadcast({ type: Message.NextQuestion });
   res.status(200).json({ message: 'Moved to next question' });
 });
 
-// Implement: Called via the Frontend to get current-question and display it on webpage
-router.get("/current-question", (req: Request, res: Response) => {
-  res.status(200).json(quizStore.currentQuestion);
+// Once Auth in place, this endpoint should be protected to only allow the host to start the quiz.
+router.post("/show-answer", (req: Request, res: Response) => {
+  const { answer } = quizStore.currentQuestion;
+  broadcast({ type: Message.ShowAnswer, answer });
+  res.status(200).json({ answer });
 });
 
-// Implement: Called via the Frontend to submit an answer to the current question
+router.get("/current-question", (req: Request, res: Response) => {
+  const { question } = quizStore.currentQuestion;
+  res.status(200).json({ question });
+});
+
 router.post("/submit-answer", (req: Request, res: Response) => {
   const { answer } = req.body;
   if (!answer || typeof answer !== 'string') {
@@ -38,6 +44,6 @@ router.post("/submit-answer", (req: Request, res: Response) => {
     // Update teams correct answer count in the lobby store (not implemented)
   }
 
-  res.status(200).json({ correct: isCorrect });
+  res.status(200).json({ message: "Answer Submitted" });
 });
 
