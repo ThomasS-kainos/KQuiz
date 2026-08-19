@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quiz Lobby</title>
+  </head>
+  <body>
+    <h1>Quiz Lobby</h1>
+    <p id="status">Connecting…</p>
+
+    <form id="joinForm">
+      <label>
+        Team name
+        <input id="teamName" maxlength="24" required autocomplete="off" />
+      </label>
+      <button type="submit">Join</button>
+    </form>
+
+    <section id="lobby" hidden>
+      <p>You are <strong id="myTeam"></strong></p>
+      <h2>Teams</h2>
+      <ul id="teams"></ul>
+      <button id="readyBtn" type="button">I'm ready</button>
+      <button id="startBtn" type="button" hidden disabled>Start quiz</button>
+    </section>
+
+    <script>
+      const statusEl = document.getElementById('status');
+      const joinForm = document.getElementById('joinForm');
+      const teamNameInput = document.getElementById('teamName');
+      const lobbyEl = document.getElementById('lobby');
+      const myTeamEl = document.getElementById('myTeam');
+      const teamsEl = document.getElementById('teams');
+      const readyBtn = document.getElementById('readyBtn');
+      const startBtn = document.getElementById('startBtn');
+
+      let ws;
+      let myId = null;
+      let joinedName = null;
+      let ready = false;
+
+      function connect() {
+        const scheme = location.protocol === 'https:' ? 'wss:' : 'ws:';
+        ws = new WebSocket(`${scheme}//${location.host}`);
+
+        ws.onopen = () => {
+          statusEl.textContent = 'Connected';
+          // Re-join automatically after a dropped connection.
+          if (joinedName) send({ type: 'join', teamName: joinedName });
+        };
+
+        ws.onmessage = (event) => handle(JSON.parse(event.data));
+
+        ws.onclose = () => {
+          statusEl.textContent = 'Disconnected — reconnecting…';
+          setTimeout(connect, 2000);
+        };
+      }
+
+      function send(payload) {
+        if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(payload));
+      }
+
+      function handle(msg) {
+        switch (msg.type) {
+          case 'welcome':
+            myId = msg.id;
+            break;
+          case 'joined':
+            joinedName = msg.teamName;
+            myTeamEl.textContent = msg.teamName;
+            joinForm.hidden = true;
+            lobbyEl.hidden = false;
+            if (ready) send({ type: 'ready', ready: true });
+            break;
+          case 'lobby':
+            renderLobby(msg);
+            break;
+          case 'started':
+            location.href = '/quiz';
+            break;
+          case 'error':
+            statusEl.textContent = msg.message;
+            break;
+        }
+      }
+
+      function renderLobby(state) {
+        teamsEl.replaceChildren();
+        state.teams.forEach((team) => {
+          const li = document.createElement('li');
+          li.textContent = `${team.teamName} — ${team.ready ? 'ready' : 'waiting'}`;
+          if (team.id === state.hostId) li.append(' (host)');
+          teamsEl.appendChild(li);
+        });
+
+        const isHost = myId !== null && myId === state.hostId;
+        startBtn.hidden = !isHost;
+        startBtn.disabled = !state.canStart;
+      }
+
+      joinForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        send({ type: 'join', teamName: teamNameInput.value });
+      });
+
+      readyBtn.addEventListener('click', () => {
+        ready = !ready;
+        readyBtn.textContent = ready ? 'Not ready' : "I'm ready";
+        send({ type: 'ready', ready });
+      });
+
+      startBtn.addEventListener('click', () => send({ type: 'start' }));
+
+      connect();
+    </script>
+  </body>
+</html>
