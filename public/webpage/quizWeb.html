@@ -25,6 +25,7 @@
       const answerForm = document.getElementById('answerForm');
       const answerInput = document.getElementById('answer');
       const resultEl = document.getElementById('result');
+      localStorage.removeItem('teamID');
       let submittedAnswer = null;
 
       function showQuiz() {
@@ -93,7 +94,7 @@
 
       answerForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const teamID = localStorage.getItem('teamID');
+        const teamID = sessionStorage.getItem('teamID');
         if (!teamID) {
           resultEl.textContent = 'Join a team before submitting an answer';
           return;

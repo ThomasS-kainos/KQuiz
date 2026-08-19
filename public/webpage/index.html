@@ -33,7 +33,9 @@
       const teamsEl = document.getElementById('teams');
       const leaveBtn = document.getElementById('leaveBtn');
 
-      let myTeamId = null;
+      localStorage.removeItem('teamID');
+
+      let myTeamId = sessionStorage.getItem('teamID');
 
       function connect() {
         const scheme = location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -82,7 +84,7 @@
         }
         const data = await res.json();
         myTeamId = data.uuid;
-        localStorage.setItem('teamID', myTeamId);
+        sessionStorage.setItem('teamID', myTeamId);
         myTeamEl.textContent = teamNameInput.value;
         joinForm.hidden = true;
         lobbyEl.hidden = false;
@@ -96,7 +98,7 @@
           body: JSON.stringify({ teamId: myTeamId })
         });
         myTeamId = null;
-        localStorage.removeItem('teamID');
+        sessionStorage.removeItem('teamID');
         lobbyEl.hidden = true;
         joinForm.hidden = false;
       });
