@@ -10,32 +10,28 @@ const app: Express = express();
 
 //Create public directory path
 const publicDir = path.resolve(import.meta.dirname, '..', 'public');
+const webpageDir = path.join(publicDir, 'webpage');
 app.use('/public', express.static(publicDir));
 
 //Define Response Type for Express
 app.use(express.json());
 
-app.use('/lobby', lobbyRouter);
-app.use('/game', gameRouter);
+app.use('/api/lobby', lobbyRouter);
+app.use('/api/game', gameRouter);
 
 // Health Check Route
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({ status: 'healthy'});
 });
 
-//Entry / lobby page
-app.get('/', (req: Request, res: Response) => {
-  res.sendFile(path.join(publicDir, 'webpage', 'index.html'));
+app.use('/api', (req: Request, res: Response) => {
+  res.status(404).json({ error: 'API route not found' });
 });
 
-//Quiz page
-app.get('/quiz', (req: Request, res: Response) => {
-  res.sendFile(path.join(publicDir, 'webpage', 'quizWeb.html'));
-});
+app.use(express.static(webpageDir));
 
-//Leaderboard page
-app.get('/leaderboard', (req: Request, res: Response) => {
-  res.sendFile(path.join(publicDir, 'webpage', 'leaderboard.html'));
+app.get(/.*/, (req: Request, res: Response) => {
+  res.sendFile(path.join(webpageDir, 'index.html'));
 });
 
 export const server = app.listen(PORT, () => {

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import { api } from '../api'
+
 type ServerMessage = {
   type: string
 }
@@ -27,7 +29,7 @@ export function LeaderboardPage() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardTeam[]>([])
 
   async function loadLeaderboard() {
-    const response = await fetch('/game/leaderboard')
+    const response = await fetch(`${api.RootURL}/game/leaderboard`)
 
     if (!response.ok) {
       throw new Error('Failed to load leaderboard')

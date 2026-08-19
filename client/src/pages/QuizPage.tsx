@@ -1,5 +1,7 @@
 import { type FormEvent, useEffect, useRef, useState } from 'react'
 
+import { api } from '../api'
+
 type ServerMessage = {
   type: string
 }
@@ -29,7 +31,7 @@ export function QuizPage() {
   const submittedAnswerRef = useRef<string | null>(null)
 
   async function loadCurrentQuestion() {
-    const response = await fetch('/game/current-question')
+    const response = await fetch(`${api.RootURL}/game/current-question`)
 
     if (!response.ok) {
       throw new Error('Failed to load question')
@@ -45,7 +47,7 @@ export function QuizPage() {
   }
 
   async function loadCurrentAnswer() {
-    const response = await fetch('/game/current-answer')
+    const response = await fetch(`${api.RootURL}/game/current-answer`)
 
     if (!response.ok) {
       throw new Error('Failed to load answer')
@@ -134,7 +136,7 @@ export function QuizPage() {
       return
     }
 
-    const response = await fetch('/game/submit-answer', {
+    const response = await fetch(`${api.RootURL}/game/submit-answer`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

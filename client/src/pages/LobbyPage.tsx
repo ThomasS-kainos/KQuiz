@@ -1,5 +1,7 @@
 import { type FormEvent, useEffect, useState } from 'react'
 
+import { api } from '../api'
+
 type Team = {
   id: string
   name: string
@@ -29,7 +31,7 @@ export function LobbyPage() {
   const [teams, setTeams] = useState<Team[]>([])
 
   async function loadTeams() {
-    const response = await fetch('/lobby/teams')
+    const response = await fetch(`${api.RootURL}/lobby/teams`)
 
     if (!response.ok) {
       throw new Error('Failed to load teams')
@@ -91,7 +93,7 @@ export function LobbyPage() {
   async function joinLobby(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const response = await fetch('/lobby/join', {
+    const response = await fetch(`${api.RootURL}/lobby/join`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ teamName }),
@@ -114,7 +116,7 @@ export function LobbyPage() {
       return
     }
 
-    await fetch('/lobby/leave', {
+    await fetch(`${api.RootURL}/lobby/leave`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ teamId: myTeamId }),
