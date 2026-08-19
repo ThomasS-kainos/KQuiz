@@ -69,6 +69,12 @@ button:hover {
   border-color: var(--accent);
 }
 
+button:disabled,
+input:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 button:focus-visible,
 input:focus-visible {
   outline: 2px solid var(--accent);
@@ -95,13 +101,76 @@ input:focus-visible {
   background: var(--social-bg);
 }
 
+.quiz-panel {
+  max-width: 720px;
+}
+
+.question-panel,
+.result-panel {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.question-text {
+  color: var(--text-h);
+  font-size: 24px;
+  line-height: 1.35;
+}
+
+.result-panel {
+  color: var(--text-h);
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.leaderboard-panel {
+  max-width: 720px;
+}
+
+.leaderboard-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  list-style-position: inside;
+}
+
+.leaderboard-list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 6px;
+  background: var(--social-bg);
+}
+
+.leaderboard-team-name {
+  color: var(--text-h);
+  font-weight: 700;
+}
+
+.leaderboard-score {
+  color: var(--text);
+  font-size: 14px;
+}
+
 @media (max-width: 640px) {
   .lobby-page {
     padding: 20px;
   }
 
   .join-row,
-  .joined-panel {
+  .joined-panel,
+  .leaderboard-list li {
     grid-template-columns: 1fr;
     display: grid;
   }
