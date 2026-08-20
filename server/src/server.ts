@@ -25,7 +25,15 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api', (req: Request, res: Response) => {
-  res.status(404).json({ error: 'API route not found' });
+  res.status(200).json({ 
+    environment: process.env.NODE_ENV || 'production',
+    message: 'Welcome to the Kainos Quiz API',
+    endpoints: {
+      '/api/lobby': 'Lobby related endpoints',
+      '/api/game': 'Game related endpoints',
+      '/api/health': 'Health check endpoint'
+    }
+  });
 });
 
 app.use(express.static(webpageDir));
