@@ -1,4 +1,4 @@
-import { emojiOptions } from '../emojiOptions'
+import { emojiOptions } from '../constants/emojiOptions'
 import { useEmojiPicker } from '../hooks/useEmojiPicker'
 import { TeamIcon } from './teamIcon'
 

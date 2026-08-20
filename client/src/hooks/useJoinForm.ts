@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from 'react'
 
-import { emojiOptions } from '../emojiOptions'
+import { emojiOptions } from '../constants/emojiOptions'
 
 type UseJoinFormOptions = {
   onJoin: (teamName: string, teamIcon: string) => Promise<void>
