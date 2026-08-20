@@ -25,12 +25,12 @@ export function JoinPage({ status, onJoin }: JoinPageProps) {
         <form className="join-form join-bottom" onSubmit={handleSubmit}>
           <StringFieldEntry
             id="teamName"
-            label="Team name"
             value={teamName}
             onChange={setTeamName}
             maxLength={24}
             required
             className="string-field-entry--rounded"
+            placeholder="Enter your team name"
           />
 
           <button type="submit" className="join-button">Join</button>
