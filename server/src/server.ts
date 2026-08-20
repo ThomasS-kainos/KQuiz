@@ -35,7 +35,7 @@ app.get(/.*/, (req: Request, res: Response) => {
 });
 
 export const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT} in ${process.env.NODE_ENV || 'production'} mode`);
 });
 
 initWebSocket(server);

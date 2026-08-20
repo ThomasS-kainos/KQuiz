@@ -9,7 +9,7 @@
   "scripts": {
     "build:client": "npm --prefix ../client run build",
     "start": "npm run build:client && node src/server.ts",
-    "dev": "node src/server.ts",
+    "dev": "npm run build:client && NODE_ENV=dev node src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
