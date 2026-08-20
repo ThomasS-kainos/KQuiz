@@ -1,4 +1,5 @@
 import { type FormEvent } from 'react'
+import { StringFieldEntry } from '../components/stringFeildEntry'
 
 type QuizPageProps = {
   status: string
@@ -17,37 +18,39 @@ export function QuizPage({ status, question, answer, result, isAnswerDisabled, i
     await onSubmitAnswer()
   }
 
+  const isGraded = result === 'Correct' || result === 'Incorrect'
+  const resultVariant = isGraded ? (result === 'Correct' ? 'correct' : 'incorrect') : result === 'Answer submitted' ? 'submitted' : undefined
+  const resultClassName = ['result-panel', resultVariant && `result-panel--${resultVariant}`].filter(Boolean).join(' ')
+
   return (
     <main className="lobby-page quiz-page">
       <section className="lobby-panel quiz-panel" aria-labelledby="quiz-title">
-        {!isResultOnly && <p className="connection-status">{status}</p>}
-        {!isResultOnly && <h1 id="quiz-title">Question</h1>}
+        <p className="connection-status">{status}</p>
+        <h1 id="quiz-title">Question</h1>
 
-        {!isResultOnly && (
-          <section className="question-panel" aria-labelledby="question-title">
-            {question ? <p className="question-text">{question}</p> : <p className="empty-state">Waiting for a question.</p>}
-          </section>
-        )}
+        <section className="question-panel" aria-labelledby="question-title">
+          {question ? <p className="question-text">{question}</p> : <p className="empty-state">Waiting for a question.</p>}
+        </section>
+
+        {isGraded && answer && <p className="submitted-answer">Your answer: <strong>{answer}</strong></p>}
 
         {!isResultOnly && question && (
           <form className="join-form answer-form" onSubmit={submitAnswer}>
-            <label htmlFor="answer">Answer</label>
-            <div className="join-row">
-              <input
-                id="answer"
-                type="text"
-                required
-                autoComplete="off"
-                value={answer}
-                disabled={isAnswerDisabled}
-                onChange={(event) => onAnswerChange(event.target.value)}
-              />
-              <button type="submit" disabled={isAnswerDisabled}>Submit answer</button>
-            </div>
+            <StringFieldEntry
+              id="answer"
+              value={answer}
+              onChange={onAnswerChange}
+              required
+              disabled={isAnswerDisabled}
+              className="string-field-entry--rounded"
+              placeholder="Type your answer"
+            />
+
+            <button type="submit" className="join-button" disabled={isAnswerDisabled}>Submit answer</button>
           </form>
         )}
 
-        {result && <p className="result-panel" role="status">{result}</p>}
+        {result && <p className={resultClassName} role="status">{result}</p>}
       </section>
     </main>
   )

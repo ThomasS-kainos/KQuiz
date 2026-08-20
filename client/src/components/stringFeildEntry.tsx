@@ -5,6 +5,7 @@ type StringFieldEntryProps = {
   maxLength?: number
   autoComplete?: string
   required?: boolean
+  disabled?: boolean
   className?: string
   placeholder?: string
 }
@@ -16,6 +17,7 @@ export function StringFieldEntry({
   maxLength,
   autoComplete = 'off',
   required,
+  disabled,
   className = '',
   placeholder,
 }: StringFieldEntryProps) {
@@ -25,6 +27,7 @@ export function StringFieldEntry({
         id={id}
         maxLength={maxLength}
         required={required}
+        disabled={disabled}
         autoComplete={autoComplete}
         placeholder={placeholder}
         value={value}
