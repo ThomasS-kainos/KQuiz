@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { type ServerMessage, useWebSocket } from './hooks/websocket'
+import { JoinPage } from './pages/JoinPage'
 import { LobbyPage } from './pages/LobbyPage'
 import { LeaderboardPage } from './pages/LeaderboardPage'
 import { QuizPage } from './pages/QuizPage'
@@ -10,6 +11,7 @@ import './App.css'
 type Team = {
   id: string
   name: string
+  teamIcon: string
 }
 
 type JoinResponse = {
@@ -41,6 +43,7 @@ function App() {
   const [apiStatus, setApiStatus] = useState('')
   const [myTeamId, setMyTeamId] = useState(() => sessionStorage.getItem('teamID'))
   const [myTeamName, setMyTeamName] = useState('')
+  const [myTeamIcon, setMyTeamIcon] = useState('')
   const [teams, setTeams] = useState<Team[]>([])
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState('')
@@ -85,11 +88,11 @@ function App() {
     setTeams(loadedTeams)
   }
 
-  async function joinLobby(teamName: string) {
+  async function joinLobby(teamName: string, teamIcon: string) {
     const response = await fetch(`${api.RootURL}/lobby/join`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ teamName }),
+      body: JSON.stringify({ teamName, teamIcon }),
     })
 
     if (!response.ok) {
@@ -101,8 +104,10 @@ function App() {
     setApiStatus('')
     setMyTeamId(data.uuid)
     setMyTeamName(teamName)
+    setMyTeamIcon(teamIcon)
     sessionStorage.setItem('teamID', data.uuid)
     await loadTeams()
+    navigate('/lobby')
   }
 
   async function leaveLobby() {
@@ -119,8 +124,10 @@ function App() {
     setApiStatus('')
     setMyTeamId(null)
     setMyTeamName('')
+    setMyTeamIcon('')
     sessionStorage.removeItem('teamID')
     await loadTeams()
+    navigate('/')
   }
 
   async function loadCurrentQuestion() {
@@ -238,36 +245,43 @@ function App() {
     }
   }, [])
 
-  if (path === '/leaderboard') {
-    return <LeaderboardPage status={status} leaderboard={leaderboard} />
+  function renderPage() {
+    if (path === '/leaderboard') {
+      return <LeaderboardPage status={status} leaderboard={leaderboard} />
+    }
+
+    if (path === '/quiz') {
+      return (
+        <QuizPage
+          status={status}
+          question={question}
+          answer={answer}
+          result={result}
+          isAnswerDisabled={isAnswerDisabled}
+          isResultOnly={isResultOnly}
+          onAnswerChange={setAnswer}
+          onSubmitAnswer={submitAnswer}
+        />
+      )
+    }
+
+    if (path === '/lobby') {
+      return (
+        <LobbyPage
+          status={status}
+          myTeamId={myTeamId}
+          myTeamName={myTeamName}
+          myTeamIcon={myTeamIcon}
+          teams={teams}
+          onLeave={leaveLobby}
+        />
+      )
+    }
+
+    return <JoinPage status={status} onJoin={joinLobby} />
   }
 
-  if (path === '/quiz') {
-    return (
-      <QuizPage
-        status={status}
-        question={question}
-        answer={answer}
-        result={result}
-        isAnswerDisabled={isAnswerDisabled}
-        isResultOnly={isResultOnly}
-        onAnswerChange={setAnswer}
-        onSubmitAnswer={submitAnswer}
-      />
-    )
-  }
-
-  return (
-    <LobbyPage
-      status={status}
-      teamName=""
-      myTeamId={myTeamId}
-      myTeamName={myTeamName}
-      teams={teams}
-      onJoin={joinLobby}
-      onLeave={leaveLobby}
-    />
-  )
+  return renderPage()
 }
 
 export default App
