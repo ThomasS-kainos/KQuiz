@@ -21,11 +21,10 @@ export function QuizPage({ status, question, answer, result, isAnswerDisabled, i
     <main className="lobby-page quiz-page">
       <section className="lobby-panel quiz-panel" aria-labelledby="quiz-title">
         {!isResultOnly && <p className="connection-status">{status}</p>}
-        {!isResultOnly && <h1 id="quiz-title">Quiz</h1>}
+        {!isResultOnly && <h1 id="quiz-title">Question</h1>}
 
         {!isResultOnly && (
           <section className="question-panel" aria-labelledby="question-title">
-            <h2 id="question-title">Question</h2>
             {question ? <p className="question-text">{question}</p> : <p className="empty-state">Waiting for a question.</p>}
           </section>
         )}

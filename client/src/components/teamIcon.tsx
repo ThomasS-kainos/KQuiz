@@ -1,7 +1,7 @@
 type TeamIconProps = {
   icon: string
   label?: string
-  size?: 'small' | 'large'
+  size?: 'small' | 'medium' | 'large'
 }
 
 // Renders a team's icon as either an emoji badge or an image URL (legacy dicebear avatars).
