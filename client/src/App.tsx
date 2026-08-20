@@ -30,6 +30,7 @@ type CurrentAnswerResponse = {
 type LeaderboardTeam = {
   id: string
   name: string
+  teamIcon: string
   correctAnswers: number
   incorrectAnswers: number
 }
@@ -247,7 +248,7 @@ function App() {
 
   function renderPage() {
     if (path === '/leaderboard') {
-      return <LeaderboardPage status={status} leaderboard={leaderboard} />
+      return <LeaderboardPage status={status} leaderboard={leaderboard} myTeamId={myTeamId} />
     }
 
     if (path === '/quiz') {
