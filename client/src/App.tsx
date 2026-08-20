@@ -5,7 +5,7 @@ import { JoinPage } from './pages/JoinPage'
 import { LobbyPage } from './pages/LobbyPage'
 import { LeaderboardPage } from './pages/LeaderboardPage'
 import { QuizPage } from './pages/QuizPage'
-import { api } from './api'
+import { api } from './constants/api'
 import './App.css'
 
 type Team = {
