@@ -11,12 +11,16 @@ router.get("/teams", (req: Request, res: Response) => {
 
 //Curently no device join limitations, could be added in the future to limit number of devices per team or per IP address.
 router.post('/join', (req: Request, res: Response) => {
-  const { teamName } = req.body;
+  const { teamName, teamIcon } = req.body;
   if (!teamName || typeof teamName !== 'string') {
     return res.status(400).json({ error: 'Invalid team name' });
   }
 
-  const newTeam = new Team(teamName);
+  if (teamIcon !== undefined && typeof teamIcon !== 'string') {
+    return res.status(400).json({ error: 'Invalid team icon' });
+  }
+
+  const newTeam = new Team(teamName, teamIcon);
   lobbyStore.AddTeam(newTeam);
 
   res.status(201).json({ uuid: `${newTeam.id}`, message: `Team ${teamName} joined successfully` });

@@ -44,6 +44,7 @@ router.get("/leaderboard", (req: Request, res: Response) => {
     .map(team => ({
       id: team.id,
       name: team.name,
+      teamIcon: team.teamIcon,
       correctAnswers: team.correctAnswers,
       incorrectAnswers: team.incorrectAnswers
     }))

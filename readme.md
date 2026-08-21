@@ -31,8 +31,6 @@ The API is built using express with typescript. All routes are defined in the `s
 Websockets are used in this project to inform the clients of state changes, There is a defenition file of what types of messages that you can use (here)[./src/websocket/message.ts]
 
 ## Issues/ Todo
-#### Leaderboard to next question
-> Currently when the user is on the leaderboard there is no javascript that can be used to tell the client where to go. This could be solved via a gloabl router that redirects based on the webscoket message.
 
 #### Clients can join midway through a game
 > Through an error if the game is already running.
@@ -42,12 +40,3 @@ Websockets are used in this project to inform the clients of state changes, Ther
 
 #### Answer Questions are not currently single use
 > Currently users can post multiple answers to the same endpoint, This needs to be locked down to single send unless there is an error.
-
-#### Test what happens with no answers
-> Just test the outcome of what happens if no answer is provided.
-
-#### Add Vite React Frontend
-> Implent a sub project that allows for vite to be used and served as the static webpage rather than Raw HTML.
-
-#### Add Loading/ idle sections
-> Add loading/ idle pages eg, when you have submitted an answer, waiting in the lobby etc

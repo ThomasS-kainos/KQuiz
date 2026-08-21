@@ -27,6 +27,7 @@ class Lobby {
         return Array.from(this.teamList.values()).map(team => ({
             id: team.id,
             name: team.name,
+            teamIcon: team.teamIcon,
             joinTime: team.joinTime
         }));
     }
