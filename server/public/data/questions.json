@@ -1,20 +1,20 @@
-{
+ {
     "quizName": "About Me",
     "questions": [
         {
-            "types": "single-choice",
+            "type": "single-choice",
             "question": "What is my favorite color?",
             "options": ["Red", "Blue", "Green", "Yellow", "Orange"],
             "answer": "Orange"
         },
         {
-            "types": "multiple-choice",
+            "type": "multiple-choice",
             "question": "What is my favorite foods?",
             "options": ["Pizza", "Sushi", "Burgers", "Pasta", "Salad"],
             "answer": ["Sushi", "Pizza"]
         },
         {
-            "types": "enter-text",
+            "type": "enter-text",
             "question": "What is my favorite hobby?",
             "options": ["Reading", "Gaming", "Hiking", "Cooking", "Traveling"],
             "answer": "Gaming"
