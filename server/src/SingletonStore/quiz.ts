@@ -21,12 +21,12 @@ export class Quiz {
         this.Questions = questions;
     }
 
-    public NextQuestion() {
+    // Returns false once the question list is exhausted, so callers know the quiz has ended.
+    public NextQuestion(): boolean {
         const nextQuestion = this.Questions.shift();
 
-        if (nextQuestion) {
-            this.currentQuestion = nextQuestion;
-        }
+        this.currentQuestion = nextQuestion ?? null;
+        return nextQuestion !== undefined;
     }
 }
 

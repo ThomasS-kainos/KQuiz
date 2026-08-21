@@ -17,7 +17,13 @@ router.post("/start-quiz", (req: Request, res: Response) => {
 
 // Once Auth in place, this endpoint should be protected to only allow the host to start the quiz.
 router.post("/next-question", (req: Request, res: Response) => {
-  quizStore.NextQuestion();
+  const hasNextQuestion = quizStore.NextQuestion();
+
+  if (!hasNextQuestion) {
+    broadcast({ type: Message.ShowLeaderboard });
+    return res.status(200).json({ message: 'Quiz complete, showing leaderboard' });
+  }
+
   broadcast({ type: Message.NextQuestion });
   res.status(200).json({ message: 'Moved to next question' });
 });
