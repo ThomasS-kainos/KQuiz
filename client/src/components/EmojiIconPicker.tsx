@@ -8,10 +8,10 @@ type EmojiIconPickerProps = {
 }
 
 export function EmojiIconPicker({ value, onChange }: EmojiIconPickerProps) {
-  const { containerRef, isOpen, toggle, selectEmoji } = useEmojiPicker(value)
+  const { containerRef, isOpen, toggle, closePicker } = useEmojiPicker()
 
   function handleSelect(emoji: string) {
-    selectEmoji(emoji)
+    closePicker()
     onChange(emoji)
   }
 

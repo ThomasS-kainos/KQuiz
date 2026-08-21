@@ -1,3 +1,4 @@
+import { ConnectionPill } from '../components/core/connectionPill'
 import { EmojiIconPicker } from '../components/EmojiIconPicker'
 import { StringFieldEntry } from '../components/stringFeildEntry'
 import { useJoinForm } from '../hooks/useJoinForm'
@@ -14,7 +15,7 @@ export function JoinPage({ status, onJoin }: JoinPageProps) {
     <main className="lobby-page join-page">
       <section className="lobby-panel join-panel" aria-labelledby="join-title">
         <div className="join-top">
-          <p className="connection-status">{status}</p>
+          <ConnectionPill status={status} />
           <h1 id="join-title" className="join-title">Kainos Quiz</h1>
         </div>
 

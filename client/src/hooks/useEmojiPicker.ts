@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-export function useEmojiPicker(initialEmoji: string) {
-  const [selectedEmoji, setSelectedEmoji] = useState(initialEmoji)
+export function useEmojiPicker() {
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -10,16 +9,16 @@ export function useEmojiPicker(initialEmoji: string) {
       return
     }
 
-    function handleOutsideClick(event: MouseEvent) {
+    function handleOutsideClick(event: PointerEvent) {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false)
       }
     }
 
-    document.addEventListener('mousedown', handleOutsideClick)
+    document.addEventListener('pointerdown', handleOutsideClick)
 
     return () => {
-      document.removeEventListener('mousedown', handleOutsideClick)
+      document.removeEventListener('pointerdown', handleOutsideClick)
     }
   }, [isOpen])
 
@@ -27,10 +26,9 @@ export function useEmojiPicker(initialEmoji: string) {
     setIsOpen((open) => !open)
   }
 
-  function selectEmoji(emoji: string) {
-    setSelectedEmoji(emoji)
+  function closePicker() {
     setIsOpen(false)
   }
 
-  return { containerRef, selectedEmoji, isOpen, toggle, selectEmoji }
+  return { containerRef, isOpen, toggle, closePicker }
 }
