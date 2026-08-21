@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { type ServerMessage } from './websocket'
 import { api } from '../constants/api'
+import type { AnswerValue, QuestionData } from '../types/questions'
 
 type Team = {
   id: string
@@ -23,13 +24,13 @@ export function useGameState() {
   const [myTeamName, setMyTeamName] = useState('')
   const [myTeamIcon, setMyTeamIcon] = useState('')
   const [teams, setTeams] = useState<Team[]>([])
-  const [question, setQuestion] = useState('')
-  const [answer, setAnswer] = useState('')
+  const [question, setQuestion] = useState<QuestionData | null>(null)
+  const [answer, setAnswer] = useState<AnswerValue>('')
   const [result, setResult] = useState('')
   const [isAnswerDisabled, setIsAnswerDisabled] = useState(false)
   const [isResultOnly, setIsResultOnly] = useState(false)
   const [leaderboard, setLeaderboard] = useState<LeaderboardTeam[]>([])
-  const submittedAnswerRef = useRef<string | null>(null)
+  const submittedResultRef = useRef<boolean | null>(null)
 
   function navigate(nextPath: string) {
     if (window.location.pathname !== nextPath) {
@@ -114,14 +115,14 @@ export function useGameState() {
       return
     }
 
-    const currentQuestion = await response.json() as { question: string }
+    const { question: currentQuestion } = await response.json() as { question: QuestionData }
     setApiStatus('')
-    setQuestion(currentQuestion.question)
-    setAnswer('')
+    setQuestion(currentQuestion)
+    setAnswer(currentQuestion.type === 'multiple-choice' ? [] : '')
     setResult('')
     setIsAnswerDisabled(false)
     setIsResultOnly(false)
-    submittedAnswerRef.current = null
+    submittedResultRef.current = null
   }
 
   async function loadCurrentAnswer() {
@@ -131,7 +132,7 @@ export function useGameState() {
       throw new Error('Failed to load answer')
     }
 
-    return response.json() as Promise<{ answer: string }>
+    return response.json() as Promise<{ answer: AnswerValue }>
   }
 
   function showResultOnly(message: string) {
@@ -161,7 +162,8 @@ export function useGameState() {
       return
     }
 
-    submittedAnswerRef.current = answer
+    const { correct } = await response.json() as { message: string; correct: boolean }
+    submittedResultRef.current = correct
     showResultOnly('Answer submitted')
     setIsAnswerDisabled(true)
   }
@@ -191,12 +193,10 @@ export function useGameState() {
       navigate('/quiz')
     }
 
-    if (message.type === 'show-answer' && submittedAnswerRef.current !== null) {
+    if (message.type === 'show-answer' && submittedResultRef.current !== null) {
       void loadCurrentAnswer()
-        .then(({ answer: currentAnswer }) => {
-          const submittedAnswer = submittedAnswerRef.current ?? ''
-          const isCorrect = submittedAnswer.trim().toLowerCase() === currentAnswer.trim().toLowerCase()
-          showResultOnly(isCorrect ? 'Correct' : 'Incorrect')
+        .then(() => {
+          showResultOnly(submittedResultRef.current ? 'Correct' : 'Incorrect')
         })
         .catch((error: Error) => {
           setApiStatus(error.message)

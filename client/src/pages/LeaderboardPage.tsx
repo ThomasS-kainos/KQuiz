@@ -1,3 +1,4 @@
+import { ConnectionPill } from '../components/core/connectionPill'
 import { TeamIcon } from '../components/teamIcon'
 
 type LeaderboardTeam = {
@@ -27,7 +28,7 @@ export function LeaderboardPage({ status, leaderboard, myTeamId }: LeaderboardPa
   return (
     <main className="lobby-page leaderboard-page">
       <section className="lobby-panel leaderboard-panel" aria-labelledby="leaderboard-title">
-        <p className="connection-status">{status}</p>
+        <ConnectionPill status={status} />
         <h1 id="leaderboard-title">Leaderboard</h1>
 
         <section className="teams-panel" aria-labelledby="leaderboard-list-title">
