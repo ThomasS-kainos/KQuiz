@@ -1,3 +1,4 @@
+import { ConnectionPill } from '../components/core/connectionPill'
 import { TeamIcon } from '../components/teamIcon'
 
 type Team = {
@@ -19,7 +20,7 @@ export function LobbyPage({ status, myTeamId, myTeamName, myTeamIcon, teams, onL
   return (
     <main className="lobby-page">
       <section className="lobby-panel" aria-labelledby="lobby-title">
-        <p className="connection-status">{status}</p>
+        <ConnectionPill status={status} />
         <h1 id="lobby-title">Quiz Lobby</h1>
 
         <section className="teams-panel" aria-labelledby="teams-title">

@@ -1,14 +1,16 @@
 import { type FormEvent } from 'react'
-import { StringFieldEntry } from '../components/stringFeildEntry'
+import { AnswerInput } from '../components/AnswerInput'
+import { ConnectionPill } from '../components/core/connectionPill'
+import type { AnswerValue, QuestionData } from '../types/questions'
 
 type QuizPageProps = {
   status: string
-  question: string
-  answer: string
+  question: QuestionData | null
+  answer: AnswerValue
   result: string
   isAnswerDisabled: boolean
   isResultOnly: boolean
-  onAnswerChange: (answer: string) => void
+  onAnswerChange: (answer: AnswerValue) => void
   onSubmitAnswer: () => Promise<void>
 }
 
@@ -21,30 +23,32 @@ export function QuizPage({ status, question, answer, result, isAnswerDisabled, i
   const isGraded = result === 'Correct' || result === 'Incorrect'
   const resultVariant = isGraded ? (result === 'Correct' ? 'correct' : 'incorrect') : result === 'Answer submitted' ? 'submitted' : undefined
   const resultClassName = ['result-panel', resultVariant && `result-panel--${resultVariant}`].filter(Boolean).join(' ')
+  const submittedAnswerText = Array.isArray(answer) ? answer.join(', ') : answer
 
   return (
     <main className="lobby-page quiz-page">
       <section className="lobby-panel quiz-panel" aria-labelledby="quiz-title">
-        <p className="connection-status">{status}</p>
+        <ConnectionPill status={status} />
         <h1 id="quiz-title">Question</h1>
 
         <section className="question-panel" aria-labelledby="question-title">
-          {question ? <p className="question-text">{question}</p> : <p className="empty-state">Waiting for a question.</p>}
+          {question ? (
+            <>
+              <p className="question-text">{question.question}</p>
+              <p className="question-type-hint">
+                {question.type === 'multiple-choice' ? 'Select all that apply' : question.type === 'single-choice' ? 'Select one answer' : 'Type your answer'}
+              </p>
+            </>
+          ) : (
+            <p className="empty-state">Waiting for a question.</p>
+          )}
         </section>
 
-        {isGraded && answer && <p className="submitted-answer">Your answer: <strong>{answer}</strong></p>}
+        {isGraded && submittedAnswerText && <p className="submitted-answer">Your answer: <strong>{submittedAnswerText}</strong></p>}
 
         {!isResultOnly && question && (
           <form className="join-form answer-form" onSubmit={submitAnswer}>
-            <StringFieldEntry
-              id="answer"
-              value={answer}
-              onChange={onAnswerChange}
-              required
-              disabled={isAnswerDisabled}
-              className="string-field-entry--rounded"
-              placeholder="Type your answer"
-            />
+            <AnswerInput question={question} value={answer} onChange={onAnswerChange} disabled={isAnswerDisabled} />
 
             <button type="submit" className="join-button" disabled={isAnswerDisabled}>Submit answer</button>
           </form>

@@ -1,23 +1,39 @@
 {
-    "quizName": "About Me",
+    "quizName": "Sample Quiz",
     "questions": [
         {
-            "types": "single-choice",
-            "question": "What is my favorite color?",
-            "options": ["Red", "Blue", "Green", "Yellow", "Orange"],
-            "answer": "Orange"
+            "type": "single-choice",
+            "question": "What is the capital of France?",
+            "options": ["Berlin", "Madrid", "Paris", "Rome"],
+            "answer": "Paris"
         },
         {
-            "types": "multiple-choice",
-            "question": "What is my favorite foods?",
-            "options": ["Pizza", "Sushi", "Burgers", "Pasta", "Salad"],
-            "answer": ["Sushi", "Pizza"]
+            "type": "single-choice",
+            "question": "Which planet is known as the Red Planet?",
+            "options": ["Venus", "Mars", "Jupiter", "Saturn"],
+            "answer": "Mars"
         },
         {
-            "types": "enter-text",
-            "question": "What is my favorite hobby?",
-            "options": ["Reading", "Gaming", "Hiking", "Cooking", "Traveling"],
-            "answer": "Gaming"
+            "type": "multiple-choice",
+            "question": "Which of the following are programming languages?",
+            "options": ["Python", "HTML", "JavaScript", "CSS"],
+            "answer": ["Python", "JavaScript"]
+        },
+        {
+            "type": "multiple-choice",
+            "question": "Which of these are primary colors?",
+            "options": ["Red", "Green", "Blue", "Orange"],
+            "answer": ["Red", "Blue"]
+        },
+        {
+            "type": "enter-text",
+            "question": "What is 7 multiplied by 6?",
+            "answer": "42"
+        },
+        {
+            "type": "enter-text",
+            "question": "What is the chemical symbol for water?",
+            "answer": "H2O"
         }
     ]
 }

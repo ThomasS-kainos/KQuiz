@@ -1,29 +1,33 @@
+import fs from "node:fs";
+import path from "node:path";
 import type { Question } from "../types/questions.ts";
+
+type QuizData = {
+    quizName: string;
+    questions: Question[];
+};
+
+const questionsPath = path.join(import.meta.dirname, "..", "..", "public", "data", "questions.json");
+const quizData: QuizData = JSON.parse(fs.readFileSync(questionsPath, "utf-8"));
 
 export class Quiz {
     public quizName: string = "Unnamed Quiz";
 
-    public currentQuestion: Question = { question: "", answer: "" };
+    public currentQuestion: Question | null = null;
     public Questions: Array<Question> = [];
 
-    constructor(quizName: string) {
+    constructor(quizName: string, questions: Array<Question> = []) {
         this.quizName = quizName;
-
-        this.Questions = [
-            { question: "What is the capital of France?", answer: "Paris" },
-            { question: "What is 2 + 2?", answer: "4" },
-            { question: "What is the largest ocean on Earth?", answer: "Pacific Ocean" },
-        ];
+        this.Questions = questions;
     }
 
-    public NextQuestion() {
+    // Returns false once the question list is exhausted, so callers know the quiz has ended.
+    public NextQuestion(): boolean {
         const nextQuestion = this.Questions.shift();
-        if (nextQuestion) {
-            this.currentQuestion = nextQuestion;
-        } else {
-            this.currentQuestion = { question: "No more questions available.", answer: "" };
-        }
+
+        this.currentQuestion = nextQuestion ?? null;
+        return nextQuestion !== undefined;
     }
 }
 
-export const quizStore: Quiz = new Quiz("Sample Quiz");
+export const quizStore: Quiz = new Quiz(quizData.quizName, quizData.questions);
