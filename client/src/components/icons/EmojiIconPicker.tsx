@@ -1,5 +1,5 @@
-import { emojiOptions } from '../constants/emojiOptions'
-import { useEmojiPicker } from '../hooks/useEmojiPicker'
+import { emojiOptions } from '../../constants/emojiOptions'
+import { useEmojiPicker } from '../../hooks/useEmojiPicker'
 import { TeamIcon } from './teamIcon'
 
 type EmojiIconPickerProps = {
