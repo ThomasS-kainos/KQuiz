@@ -1,5 +1,5 @@
-import { StringFieldEntry } from './stringFieldEntry'
-import type { AnswerValue, QuestionData } from '../types/questions'
+import { TextInputQuestion } from '../questions/TextInputQuestion'
+import type { AnswerValue, QuestionData } from '../../types/questions'
 
 type AnswerInputProps = {
   question: QuestionData
@@ -61,14 +61,10 @@ export function AnswerInput({ question, value, onChange, disabled }: AnswerInput
   const textValue = typeof value === 'string' ? value : ''
 
   return (
-    <StringFieldEntry
-      id="answer"
+    <TextInputQuestion
       value={textValue}
       onChange={onChange}
-      required
       disabled={disabled}
-      className="string-field-entry--rounded"
-      placeholder="Type your answer"
     />
   )
 }
