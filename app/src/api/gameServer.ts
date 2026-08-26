@@ -2,6 +2,13 @@ export interface HealthStatus {
   status: string;
 }
 
+export interface Team {
+  id: string;
+  name: string;
+  teamIcon: string;
+  joinTime: number;
+}
+
 function baseUrl(port: number): string {
   return `http://127.0.0.1:${port}`;
 }
@@ -9,6 +16,12 @@ function baseUrl(port: number): string {
 export async function getHealth(port: number): Promise<HealthStatus> {
   const res = await fetch(`${baseUrl(port)}/api/health`);
   if (!res.ok) throw new Error(`Health check failed: ${res.status}`);
+  return res.json();
+}
+
+export async function getTeams(port: number): Promise<Team[]> {
+  const res = await fetch(`${baseUrl(port)}/api/lobby/teams`);
+  if (!res.ok) throw new Error(`Failed to fetch teams: ${res.status}`);
   return res.json();
 }
 

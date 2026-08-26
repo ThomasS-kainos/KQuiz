@@ -22,21 +22,26 @@ function App() {
   }
 
   return (
-    <>
-      <h1>💖 Hello World!</h1>
-      <p>Welcome to your Electron application.</p>
-      <div id="server-controls">
-        <button onClick={handleStart} disabled={status.running}>
-          Start Server
-        </button>
-        <button onClick={handleStop} disabled={!status.running}>
-          Stop Server
-        </button>
-        <p>
-          Status: {status.running ? `running on port ${status.port}` : 'stopped'}
-        </p>
+    <div className="app-titlebar-page">
+      <header className="app-titlebar">
+        <h1>Bench</h1>
+      </header>
+      <div className="app-content">
+        <div className="panel">
+          <h2>Quiz Host</h2>
+          <p>Start the embedded game server to host a quiz.</p>
+          <span className="status-badge status-badge--offline">
+            <span className="status-badge__dot" />
+            Server stopped
+          </span>
+          <div className="control-grid">
+            <button onClick={handleStart} disabled={status.running}>
+              Start Server
+            </button>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 
