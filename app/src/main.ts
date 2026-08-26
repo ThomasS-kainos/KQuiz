@@ -2,16 +2,16 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import started from 'electron-squirrel-startup';
-import type { RunningServer } from '@bench/server';
+import type { RunningServer } from '@kquiz/server';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // The embedded server resolves its own `public/` assets relative to this root
 // (import.meta.dirname doesn't survive being bundled into this CJS main process).
-process.env.BENCH_SERVER_ROOT ??= path.resolve(dirname, '../../../modules/server');
+process.env.BENCH_SERVER_ROOT ??= path.resolve(dirname, '../../../packages/server');
 
 // Deferred so BENCH_SERVER_ROOT is set before the server module's top-level code runs.
-const serverModule = import('@bench/server');
+const serverModule = import('@kquiz/server');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {

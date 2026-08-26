@@ -1,34 +1,37 @@
-# Quiz Server System
-This is a little demo project to learn about websockets and data management with express. This is part of a wider idea for a localy managed quiz app over the local network.
+# K-Quiz (Temp Name) System
+K Quiz is a local first quiz app about running local quizes via the network, It is built on Typescript and React. It is idealy meant to be run for quizes inisde of Kainos to prevent the use of paper and make running, hosting and crafting quizes easier for memebers. This is currently a labour of love worked on in my time between tickets and has had Copilot guide me in its creation around design and implementaion.
 
 ### Dependencies
 For this project to work you must be using **Node 26.x**
+You can install Node Here: https://nodejs.org/en/download 
 
 ### Setup Guide
+
+** Note the following commands should be run in the root of K-Quiz**
+
 1. Clone the repo into your desired folder like such:
 ```bash
 git clone https://github.com/ThomasS-kainos/KQuiz.git YOUR_NAME_HERE
 ```
 2. Run the node installer
 ```bash
-# This Example uses npm
-npm install
+npm install # This Example uses npm
 ```
 3. Run the current server file with the command:
 ```
 npm run dev
 ```
 
-## Design
-The overall plan realting to the system design of this subcomponent is as such:
+### Project Design
+This project is exculsively written in typescript and uses React as the rendering package (Sorry Tauri & Wails Devs). It consists of 3 main components that are all tightly intergrated together:
+1. Native App (Electron)
+    > Imports all server logic and acts as a standard app with the ability to add, edit & host a quiz.
+2. Game Server (Express Local Package)
+    > Is a local package that uses express to server a clasic web Rest API & Web sockets. This adds the mechanism for clients to join a hosted quiz over the local network.
+3. Client Webpage (Vite React app)
+    > Is the static webpage that is built into the servers public directory so that the app can be servered when a user wants to join a quiz.
 
-TODO FINISH LATER
-
-### API
-The API is built using express with typescript. All routes are defined in the `src/routes` folder of the project, and registered in the `src/server.ts` 
-
-### Websockets
-Websockets are used in this project to inform the clients of state changes, There is a defenition file of what types of messages that you can use (here)[./src/websocket/message.ts]
+To work within a mono repo the use of NPM workspaces is used so that the server module can be injected into the quiz app and served.
 
 ## Issues/ Todo
 

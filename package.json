@@ -3,11 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "workspaces": [
-    "app",
-    "packages/client",
-    "packages/server"
+    "packages/*",
+    "app"
   ],
   "scripts": {
-    "dev": "npm --workspace @bench/server run build:client && npm --workspace app run start"
+    "dev": "npm --workspace @kquiz/server run build:client && npm --workspace app run start"
   }
 }
