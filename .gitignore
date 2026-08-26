@@ -148,3 +148,5 @@ vite.config.ts.timestamp-*
 
 # Local Build Files
 server/public/webpage/
+
+.DS_Store
