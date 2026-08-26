@@ -7,7 +7,7 @@ You can install Node Here: https://nodejs.org/en/download
 
 ### Setup Guide
 
-** Note the following commands should be run in the root of K-Quiz**
+**Note the following commands should be run in the root of K-Quiz**
 
 1. Clone the repo into your desired folder like such:
 ```bash
