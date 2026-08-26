@@ -26,6 +26,15 @@ function createApp(): Express {
   //Define Response Type for Express
   app.use(express.json());
 
+  // Allow the Electron/Vite dev renderer (different origin) to call the API.
+  app.use((req: Request, res: Response, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, teamID');
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    next();
+  });
+
   app.use('/api/lobby', lobbyRouter);
   app.use('/api/game', gameRouter);
 
