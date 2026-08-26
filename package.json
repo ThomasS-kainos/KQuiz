@@ -4,7 +4,10 @@
   "version": "1.0.0",
   "workspaces": [
     "app",
-    "client",
-    "server"
-  ]
+    "packages/client",
+    "packages/server"
+  ],
+  "scripts": {
+    "dev": "npm --workspace @bench/server run build:client && npm --workspace app run start"
+  }
 }

@@ -8,7 +8,7 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // The embedded server resolves its own `public/` assets relative to this root
 // (import.meta.dirname doesn't survive being bundled into this CJS main process).
-process.env.BENCH_SERVER_ROOT ??= path.resolve(dirname, '../../../server');
+process.env.BENCH_SERVER_ROOT ??= path.resolve(dirname, '../../../modules/server');
 
 // Deferred so BENCH_SERVER_ROOT is set before the server module's top-level code runs.
 const serverModule = import('@bench/server');
