@@ -28,6 +28,29 @@
 
 import './index.css';
 
+const startButton = document.getElementById('server-start') as HTMLButtonElement;
+const stopButton = document.getElementById('server-stop') as HTMLButtonElement;
+const statusText = document.getElementById('server-status') as HTMLParagraphElement;
+
+function renderStatus(status: { running: boolean; port: number }) {
+  statusText.textContent = status.running
+    ? `Status: running on port ${status.port}`
+    : 'Status: stopped';
+  startButton.disabled = status.running;
+  stopButton.disabled = !status.running;
+}
+
+startButton.addEventListener('click', async () => {
+  renderStatus(await window.serverAPI.start());
+});
+
+stopButton.addEventListener('click', async () => {
+  renderStatus(await window.serverAPI.stop());
+});
+
+window.serverAPI.status().then(renderStatus);
+
+
 console.log(
   '👋 This message is being logged by "renderer.ts", included via Vite',
 );

@@ -1,13 +1,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { Question } from "../types/questions.ts";
+import { getServerRoot } from "../paths.ts";
 
 type QuizData = {
     quizName: string;
     questions: Question[];
 };
 
-const questionsPath = path.join(import.meta.dirname, "..", "..", "public", "data", "questions.json");
+const questionsPath = path.join(getServerRoot(), "public", "data", "questions.json");
 const quizData: QuizData = JSON.parse(fs.readFileSync(questionsPath, "utf-8"));
 
 export class Quiz {
