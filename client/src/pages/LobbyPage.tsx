@@ -1,5 +1,5 @@
 import { ConnectionPill } from '../components/core/connectionPill'
-import { TeamIcon } from '../components/icons/teamIcon'
+import { TeamIcon } from '../components/teamIcon'
 
 type Team = {
   id: string

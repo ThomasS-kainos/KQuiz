@@ -1,5 +1,5 @@
 import { type FormEvent } from 'react'
-import { AnswerInput } from '../components/questions/AnswerInput'
+import { AnswerInput } from '../components/AnswerInput'
 import { ConnectionPill } from '../components/core/connectionPill'
 import type { AnswerValue, QuestionData } from '../types/questions'
 
