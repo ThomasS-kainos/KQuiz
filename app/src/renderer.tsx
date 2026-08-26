@@ -26,31 +26,19 @@
  * ```
  */
 
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import './index.css';
+import App from './App';
 
-const startButton = document.getElementById('server-start') as HTMLButtonElement;
-const stopButton = document.getElementById('server-stop') as HTMLButtonElement;
-const statusText = document.getElementById('server-status') as HTMLParagraphElement;
+const container = document.getElementById('root') as HTMLDivElement;
 
-function renderStatus(status: { running: boolean; port: number }) {
-  statusText.textContent = status.running
-    ? `Status: running on port ${status.port}`
-    : 'Status: stopped';
-  startButton.disabled = status.running;
-  stopButton.disabled = !status.running;
-}
-
-startButton.addEventListener('click', async () => {
-  renderStatus(await window.serverAPI.start());
-});
-
-stopButton.addEventListener('click', async () => {
-  renderStatus(await window.serverAPI.stop());
-});
-
-window.serverAPI.status().then(renderStatus);
-
+createRoot(container).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
 
 console.log(
-  '👋 This message is being logged by "renderer.ts", included via Vite',
+  '👋 This message is being logged by "renderer.tsx", included via Vite',
 );
