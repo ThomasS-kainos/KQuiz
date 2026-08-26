@@ -40,3 +40,9 @@ Websockets are used in this project to inform the clients of state changes, Ther
 
 #### Answer Questions are not currently single use
 > Currently users can post multiple answers to the same endpoint, This needs to be locked down to single send unless there is an error.
+
+### When no answer is provided and next show answer is pressed issue
+> When the user does not have a answer for a question it holds the client on the page unitl next question is pressed instead of locking in a null answer
+
+### NPM package for server is a nightmare
+> Make it easier to clone the repo as it is currently a nightmare to do. NPM packaging for @server is magic
