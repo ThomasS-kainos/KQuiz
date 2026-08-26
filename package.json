@@ -1,0 +1,12 @@
+{
+  "name": "bench",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "packages/*",
+    "app"
+  ],
+  "scripts": {
+    "dev": "npm --workspace @kquiz/server run build:client && npm --workspace app run start"
+  }
+}
