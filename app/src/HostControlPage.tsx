@@ -8,6 +8,7 @@ import {
   showLeaderboard,
   type Team,
 } from './api/gameServer';
+import { useShortcut } from './hooks/useShortcut';
 
 interface HostControlPageProps {
   port: number;
@@ -63,6 +64,12 @@ function HostControlPage({ port, onStop }: HostControlPageProps) {
 
   const isOnline = health === 'healthy';
 
+  useShortcut('s', withErrorHandling(() => startQuiz(port)));
+  useShortcut('n', withErrorHandling(() => nextQuestion(port)));
+  useShortcut('t', withErrorHandling(() => showAnswer(port)));
+  useShortcut('l', withErrorHandling(() => showLeaderboard(port)));
+  useShortcut('q', onStop);
+
   return (
     <div className="app-titlebar-page">
       <header className="app-titlebar">
@@ -76,11 +83,21 @@ function HostControlPage({ port, onStop }: HostControlPageProps) {
           </span>
           {error && <p className="error-text">{error}</p>}
           <div className="control-grid">
-            <button onClick={withErrorHandling(() => startQuiz(port))}>Start Quiz</button>
-            <button onClick={withErrorHandling(() => nextQuestion(port))}>Next Question</button>
-            <button onClick={withErrorHandling(() => showAnswer(port))}>Show Answer</button>
-            <button onClick={withErrorHandling(() => showLeaderboard(port))}>Show Leaderboard</button>
-            <button className="button--danger" onClick={onStop}>Stop Server</button>
+            <button onClick={withErrorHandling(() => startQuiz(port))}>
+              Start Quiz <span className="shortcut-key">⌘S</span>
+            </button>
+            <button onClick={withErrorHandling(() => nextQuestion(port))}>
+              Next Question <span className="shortcut-key">⌘N</span>
+            </button>
+            <button onClick={withErrorHandling(() => showAnswer(port))}>
+              Show Answer <span className="shortcut-key">⌘T</span>
+            </button>
+            <button onClick={withErrorHandling(() => showLeaderboard(port))}>
+              Show Leaderboard <span className="shortcut-key">⌘L</span>
+            </button>
+            <button className="button--danger" onClick={onStop}>
+              Stop Server <span className="shortcut-key">⌘Q</span>
+            </button>
           </div>
           <div className="teams-section">
             <h2>Lobby ({teams.length})</h2>
