@@ -29,7 +29,6 @@ export function LeaderboardPage({ status, leaderboard, myTeamId }: LeaderboardPa
     <main className="lobby-page leaderboard-page">
       <section className="lobby-panel leaderboard-panel" aria-labelledby="leaderboard-title">
         <ConnectionPill status={status} />
-        <ConnectionPill status={status} />
         <h1 id="leaderboard-title">Leaderboard</h1>
 
         <section className="teams-panel" aria-labelledby="leaderboard-list-title">
