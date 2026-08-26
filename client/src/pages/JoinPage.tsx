@@ -1,6 +1,6 @@
 import { ConnectionPill } from '../components/core/connectionPill'
-import { EmojiIconPicker } from '../components/EmojiIconPicker'
-import { StringFieldEntry } from '../components/stringFeildEntry'
+import { EmojiIconPicker } from '../components/icons/EmojiIconPicker'
+import { StringFieldEntry } from '../components/core/stringFeildEntry'
 import { useJoinForm } from '../hooks/useJoinForm'
 
 type JoinPageProps = {
