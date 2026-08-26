@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { ServerStatus } from './preload.ts';
+import HostControlPage from './HostControlPage';
 
 function App() {
   const [status, setStatus] = useState<ServerStatus>({ running: false, port: 0 });
@@ -15,6 +16,10 @@ function App() {
   const handleStop = async () => {
     setStatus(await window.serverAPI.stop());
   };
+
+  if (status.running) {
+    return <HostControlPage port={status.port} onStop={handleStop} />;
+  }
 
   return (
     <>
@@ -36,3 +41,4 @@ function App() {
 }
 
 export default App;
+
