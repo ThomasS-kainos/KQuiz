@@ -44,6 +44,7 @@
     "@kquiz/server": "^1.0.0",
     "electron-squirrel-startup": "^1.0.1",
     "express": "^5.2.1",
+    "qrcode.react": "^4.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "uuid": "^14.0.1",

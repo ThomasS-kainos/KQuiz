@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import started from 'electron-squirrel-startup';
@@ -41,6 +42,20 @@ ipcMain.handle('server:status', async () => {
   const { DEFAULT_PORT } = await serverModule;
   return { running: runningServer !== null, port: DEFAULT_PORT };
 });
+
+// Preload runs sandboxed, so `os` lookups have to happen here in the main process.
+const getLocalIpAddress = (): string => {
+  for (const addresses of Object.values(os.networkInterfaces())) {
+    for (const address of addresses ?? []) {
+      if (address.family === 'IPv4' && !address.internal) {
+        return address.address;
+      }
+    }
+  }
+  return '127.0.0.1';
+};
+
+ipcMain.handle('network:local-ip', () => getLocalIpAddress());
 
 const createWindow = () => {
   // Create the browser window.
