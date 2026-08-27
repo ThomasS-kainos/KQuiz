@@ -1,6 +1,7 @@
 import type { QuizData, StoredQuiz } from '../types/quiz';
 
 const STORAGE_KEY = 'bench.quizzes';
+const SEEDED_KEY = 'bench.quizzes.seeded';
 
 // Seeded on first run so there is always something to host; previously shipped
 // as packages/server/public/data/questions.json.
@@ -61,12 +62,17 @@ function writeAll(quizzes: StoredQuiz[]): void {
 
 export function listQuizzes(): StoredQuiz[] {
   const quizzes = readAll();
-  if (quizzes.length === 0) {
+  if (quizzes.length === 0 && !window.localStorage.getItem(SEEDED_KEY)) {
     const seeded = [toStoredQuiz(SAMPLE_QUIZ)];
     writeAll(seeded);
+    window.localStorage.setItem(SEEDED_KEY, 'true');
     return seeded;
   }
   return quizzes;
+}
+
+export function getQuiz(id: string): StoredQuiz | null {
+  return readAll().find((quiz) => quiz.id === id) ?? null;
 }
 
 export function saveQuiz(quiz: QuizData, id?: string): StoredQuiz {
