@@ -2,6 +2,7 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { contextBridge, ipcRenderer } from 'electron';
+import type { QuizData } from './types/quiz';
 
 export interface ServerStatus {
   running: boolean;
@@ -9,7 +10,8 @@ export interface ServerStatus {
 }
 
 contextBridge.exposeInMainWorld('serverAPI', {
-  start: (): Promise<ServerStatus> => ipcRenderer.invoke('server:start'),
+  start: (quiz: QuizData): Promise<ServerStatus> =>
+    ipcRenderer.invoke('server:start', quiz),
   stop: (): Promise<ServerStatus> => ipcRenderer.invoke('server:stop'),
   status: (): Promise<ServerStatus> => ipcRenderer.invoke('server:status'),
 });

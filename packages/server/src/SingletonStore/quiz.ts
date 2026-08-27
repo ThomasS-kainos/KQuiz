@@ -1,15 +1,9 @@
-import fs from "node:fs";
-import path from "node:path";
 import type { Question } from "../types/questions.ts";
-import { getServerRoot } from "../paths.ts";
 
-type QuizData = {
+export type QuizData = {
     quizName: string;
     questions: Question[];
 };
-
-const questionsPath = path.join(getServerRoot(), "public", "data", "questions.json");
-const quizData: QuizData = JSON.parse(fs.readFileSync(questionsPath, "utf-8"));
 
 export class Quiz {
     public quizName: string = "Unnamed Quiz";
@@ -22,6 +16,13 @@ export class Quiz {
         this.Questions = questions;
     }
 
+    // Replaces the quiz contents in place so existing imports keep pointing at the same store.
+    public Load({ quizName, questions }: QuizData): void {
+        this.quizName = quizName;
+        this.Questions = [...questions];
+        this.currentQuestion = null;
+    }
+
     // Returns false once the question list is exhausted, so callers know the quiz has ended.
     public NextQuestion(): boolean {
         const nextQuestion = this.Questions.shift();
@@ -31,4 +32,8 @@ export class Quiz {
     }
 }
 
-export const quizStore: Quiz = new Quiz(quizData.quizName, quizData.questions);
+export const quizStore: Quiz = new Quiz("Unnamed Quiz");
+
+export function loadQuiz(quizData: QuizData): void {
+    quizStore.Load(quizData);
+}
