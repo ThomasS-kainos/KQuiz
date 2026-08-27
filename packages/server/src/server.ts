@@ -68,7 +68,7 @@ function createApp(): Express {
 export function startServer(port: number = DEFAULT_PORT): Promise<RunningServer> {
   return new Promise((resolve) => {
     const app = createApp();
-    const server = app.listen(port, () => {
+    const server = app.listen(port, '0.0.0.0', () => {
       console.log(`Server is running on port ${port} in ${process.env.NODE_ENV || 'production'} mode`);
       resolve({ server, wss: initWebSocket(server) });
     });

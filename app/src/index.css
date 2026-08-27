@@ -180,6 +180,27 @@ button.button--danger:hover {
   opacity: 0.8;
 }
 
+.join-section {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.join-section h2 {
+  font-size: 16px;
+}
+
+.join-section svg {
+  border-radius: 6px;
+  background: #fff;
+}
+
+.join-url {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--text-muted);
+}
+
 .teams-section {
   display: grid;
   gap: 10px;

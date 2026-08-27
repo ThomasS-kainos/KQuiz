@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import {
   getHealth,
   getTeams,
@@ -19,6 +20,17 @@ function HostControlPage({ port, onStop }: HostControlPageProps) {
   const [health, setHealth] = useState('checking...');
   const [teams, setTeams] = useState<Team[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [localIp, setLocalIp] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    window.networkAPI.getLocalIp().then((ip) => {
+      if (!cancelled) setLocalIp(ip);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -63,6 +75,7 @@ function HostControlPage({ port, onStop }: HostControlPageProps) {
   };
 
   const isOnline = health === 'healthy';
+  const joinUrl = localIp ? `http://${localIp}:${port}` : null;
 
   useShortcut('s', withErrorHandling(() => startQuiz(port)));
   useShortcut('n', withErrorHandling(() => nextQuestion(port)));
@@ -82,6 +95,17 @@ function HostControlPage({ port, onStop }: HostControlPageProps) {
             Server {health} on port {port}
           </span>
           {error && <p className="error-text">{error}</p>}
+          <div className="join-section">
+            <h2>Join</h2>
+            {joinUrl ? (
+              <>
+                <QRCodeSVG value={joinUrl} size={180} includeMargin />
+                <p className="join-url">{joinUrl}</p>
+              </>
+            ) : (
+              <p className="empty-state">Finding local network address…</p>
+            )}
+          </div>
           <div className="control-grid">
             <button onClick={withErrorHandling(() => startQuiz(port))}>
               Start Quiz <span className="shortcut-key">⌘S</span>

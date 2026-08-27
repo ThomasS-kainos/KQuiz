@@ -7,6 +7,9 @@ declare global {
       stop: () => Promise<ServerStatus>;
       status: () => Promise<ServerStatus>;
     };
+    networkAPI: {
+      getLocalIp: () => Promise<string>;
+    };
   }
 }
 

@@ -13,3 +13,7 @@ contextBridge.exposeInMainWorld('serverAPI', {
   stop: (): Promise<ServerStatus> => ipcRenderer.invoke('server:stop'),
   status: (): Promise<ServerStatus> => ipcRenderer.invoke('server:status'),
 });
+
+contextBridge.exposeInMainWorld('networkAPI', {
+  getLocalIp: (): Promise<string> => ipcRenderer.invoke('network:local-ip'),
+});
