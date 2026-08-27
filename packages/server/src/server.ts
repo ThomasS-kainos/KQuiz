@@ -7,6 +7,10 @@ import { router as gameRouter } from './routes/game.ts';
 import { router as lobbyRouter } from './routes/lobby.ts';
 import { initWebSocket } from './websocket/serverWs.ts';
 import { getServerRoot } from './paths.ts';
+import { loadQuiz, type QuizData } from './SingletonStore/quiz.ts';
+
+export type { QuizData };
+export type { Question } from './types/questions.ts';
 
 export const DEFAULT_PORT = 3000;
 
@@ -65,8 +69,12 @@ function createApp(): Express {
 }
 
 // Starts the HTTP + WebSocket server; resolves once listening.
-export function startServer(port: number = DEFAULT_PORT): Promise<RunningServer> {
+export function startServer(
+  port: number = DEFAULT_PORT,
+  quiz?: QuizData,
+): Promise<RunningServer> {
   return new Promise((resolve) => {
+    if (quiz) loadQuiz(quiz);
     const app = createApp();
     const server = app.listen(port, '0.0.0.0', () => {
       console.log(`Server is running on port ${port} in ${process.env.NODE_ENV || 'production'} mode`);

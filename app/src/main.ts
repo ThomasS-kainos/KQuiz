@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import started from 'electron-squirrel-startup';
-import type { RunningServer } from '@kquiz/server';
+import type { RunningServer, QuizData } from '@kquiz/server';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -21,10 +21,19 @@ if (started) {
 
 let runningServer: RunningServer | null = null;
 
-ipcMain.handle('server:start', async () => {
+const isQuizData = (value: unknown): value is QuizData =>
+  typeof value === 'object' &&
+  value !== null &&
+  typeof (value as QuizData).quizName === 'string' &&
+  Array.isArray((value as QuizData).questions);
+
+ipcMain.handle('server:start', async (_event, quiz: unknown) => {
   const { startServer, DEFAULT_PORT } = await serverModule;
+  if (!isQuizData(quiz)) {
+    throw new Error('A quiz must be selected before starting the server');
+  }
   if (!runningServer) {
-    runningServer = await startServer(DEFAULT_PORT);
+    runningServer = await startServer(DEFAULT_PORT, quiz);
   }
   return { running: true, port: DEFAULT_PORT };
 });
